@@ -12,9 +12,18 @@
           </div>
           <div v-show="!hasNoPasswords" v-for="password in passwords" v-bind:key="password.name">
             <v-card class="my-5 pa-3 blue-grey lighten-4" outlined>
-              {{ password }}
-              <v-card-title>{{ password.name }}</v-card-title>
-              <v-text-field outlined></v-text-field>
+              <p>{{ password.name }}</p>
+              <div v-for="(keyValue,keyName) in password" :key="keyName" class=" py-1   ">
+                <v-text-field
+                    :label="keyName"
+                    max-width="100px"
+                    :value="keyValue"
+                    v-model="password[keyName]"
+                    class="px-2"
+                    persistent-hint
+                />
+
+              </div>
             </v-card>
           </div>
 

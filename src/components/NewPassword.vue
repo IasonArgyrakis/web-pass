@@ -62,6 +62,7 @@ export default {
   props: [],
   mounted() {
     this.getKey()
+    this.makeBasicPassword()
 
 
   },
@@ -82,6 +83,13 @@ export default {
     }),
     getKey() {
       this.key = "pass123"
+    },
+    makeBasicPassword(){
+      Object.assign(this.passwordObj, {name: ""})
+      Object.assign(this.passwordObj, {url: ""})
+      Object.assign(this.passwordObj, {email: ""})
+      Object.assign(this.passwordObj, {password: ""})
+      this.$forceUpdate();
     },
 
 
@@ -105,8 +113,6 @@ export default {
       let keyName = this.newKeyName.toLowerCase()
       Object.assign(this.passwordObj, {[keyName]: ""})
       this.$forceUpdate();
-
-
     }
   },
   watch:{
