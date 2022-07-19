@@ -6,17 +6,19 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state () {
         return {
-            count: 0
+            PasswordList: []
         }
     },
     getters:{
-        doneTodos (state) {
-            return state.count
+        getPasswordList (state) {
+            return state.PasswordList
         }
     },
     mutations: {
-        increment (state) {
-            state.count++
+        savePassword (state,payload) {
+
+            let list=state.PasswordList
+                list.push(payload)
         }
     }
 })

@@ -10,7 +10,7 @@
                 :label="keyName"
                 max-width="100px"
                 :value="keyValue"
-
+                v-model="passwordObj[keyName]"
                 class="px-2"
                 persistent-hint
             />
@@ -55,7 +55,7 @@
 
 <script lang="js">
 import CryptoJs from "crypto-js"
-import { mapMutations } from "vuex"
+import {mapMutations} from "vuex"
 
 export default {
   name: 'src-components-new-password',
@@ -70,12 +70,7 @@ export default {
       newKeyName: undefined,
       keyValues: ["Email", "Password", "Number", "Text"],
       key: "",
-      passwordObj: {
-        "name": "",
-        "email": "",
-        "password": "",
-        "url": ""
-      },
+      passwordObj: {},
       hashedPassword: ""
 
 
@@ -83,7 +78,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      addPassword:'addPassword'
+      savePassword: "savePassword"
     }),
     getKey() {
       this.key = "pass123"
@@ -100,27 +95,25 @@ export default {
     savePassObj() {
       var parsedobj = JSON.parse(JSON.stringify(this.passwordObj))
       console.log(parsedobj)
-      this.addPassword({password: parsedobj})
+      this.savePassword(parsedobj)
+      //this.$router.push("home")
+
 
 
     },
     addField() {
       let keyName = this.newKeyName.toLowerCase()
-      this.passwordObj[keyName] = ""
-      this.newKeyName = "";
+      Object.assign(this.passwordObj, {[keyName]: ""})
+      this.$forceUpdate();
+
 
     }
-
-
-  }
-  ,
-  computed: {
-    passHint() {
-      return "After Hashing " + this.hashedPassword
+  },
+  watch:{
+    passwordObj:{
+      deep:true,
     }
   }
-  ,
-  watch: {}
 }
 
 

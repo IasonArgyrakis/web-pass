@@ -4,9 +4,16 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <div v-for="password in passwords" v-bind:key="password.name">
-            <v-card class="my-5 p-3" outlined>
-              <v-card-title>{{password.name}}</v-card-title>
+          <div v-show="hasNoPasswords">
+            <v-card class="my-5 p-3 orange lighten-4" outlined>
+              <v-card-title>No Passwords</v-card-title>
+
+            </v-card>
+          </div>
+          <div v-show="!hasNoPasswords" v-for="password in passwords" v-bind:key="password.name">
+            <v-card class="my-5 pa-3 blue-grey lighten-4" outlined>
+              {{ password }}
+              <v-card-title>{{ password.name }}</v-card-title>
               <v-text-field outlined></v-text-field>
             </v-card>
           </div>
@@ -21,44 +28,39 @@
 </template>
 
 <script lang="js">
+import {mapGetters} from "vuex"
 
-  export default  {
-    name: 'src-components-list-passwords',
-    props: [],
-    mounted () {
-      this.smth()
+export default {
+  name: 'src-components-list-passwords',
+  props: [],
+  mounted() {
+    this.passwords = this.getPasswordList()
 
-    },
-    data () {
-      return {
-        passwords:[
-          {name:"smth",url:"someurl",password:"somepass"},
-          {name:"smth2",url:"someurl",password:"somepass"},
-          {name:"smth3",url:"someurl",password:"somepass"},
-          {name:"smth4",url:"someurl",password:"somepass"},
-          {name:"smth5",url:"someurl",password:"somepass"}
-
-        ]
-
-      }
-    },
-    methods: {
-
-      smth(){
-        console.log(this.$store.getters.doneTodos)
-      }
-
-    },
-    computed: {
-
+  },
+  data() {
+    return {
+      passwords: []
     }
+  },
+  methods: {
+    ...mapGetters({
+      getPasswordList: "getPasswordList"
+    })
+
+  },
+  computed: {
+    hasNoPasswords(){
+      return this.passwords.length===0
+    },
+
+  }
 }
 
 
 </script>
 
 <style scoped lang="scss">
-  .src-components-list-passwords {
+.src-components-list-passwords {
 
-  }
+}
 </style>
