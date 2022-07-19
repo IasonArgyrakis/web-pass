@@ -1,32 +1,42 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+        app
+        color="primary"
+
+        class="mb-3"
+    >
+      <v-toolbar-title class="white--text" >WebPass</v-toolbar-title>
+      <v-btn plain to="/"> <v-icon color="orange darken-2" class="ml-2 ">mdi-lock</v-icon></v-btn>
+      <v-text-field
+          hide-details
+          placeholder="Master"
+          filled
+          rounded
+          dense
+          dark
+          single-line
+          class="shrink mx-4"
+      >
+      </v-text-field>
+      <v-spacer></v-spacer>
+      <v-btn color="" to="/new-password">New Password</v-btn>
+
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
 
-nav {
-  padding: 30px;
-}
+export default {
+  name: 'App',
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+  data: () => ({
+    //
+  }),
+};
+</script>
