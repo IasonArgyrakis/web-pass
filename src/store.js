@@ -6,6 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state () {
         return {
+            masterPassword:"",
             PasswordList: []
         }
     },
@@ -16,10 +17,13 @@ const store = new Vuex.Store({
     },
     mutations: {
         savePassword (state,payload) {
-
             let list=state.PasswordList
                 list.push(payload)
+        },
+        setMasterPassword(state,payload){
+            state.masterPassword=payload
         }
+
     }
 })
 export default store

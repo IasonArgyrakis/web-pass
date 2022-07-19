@@ -63,8 +63,6 @@ export default {
   mounted() {
     this.getKey()
     this.makeBasicPassword()
-
-
   },
   data() {
     return {

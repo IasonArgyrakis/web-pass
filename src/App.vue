@@ -17,6 +17,8 @@
           dark
           single-line
           class="shrink mx-4"
+          v-model="masterPassword"
+          @change="setMasterPassword()"
       >
       </v-text-field>
       <v-spacer></v-spacer>
@@ -36,7 +38,13 @@ export default {
   name: 'App',
 
   data: () => ({
-    //
+    masterPassword:""
   }),
+  methods:{
+    setMasterPassword(){
+      console.log(this.masterPassword)
+
+    }
+  }
 };
 </script>
