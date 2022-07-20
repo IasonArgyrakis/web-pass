@@ -4,13 +4,19 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <div v-show="hasNoPasswords">
+          <div v-show="!isDecrypted">
+            <v-card class="my-5 p-3 red " outlined>
+              <v-card-title>You need to decrypt</v-card-title>
+
+            </v-card>
+          </div>
+          <div v-show="hasNoPasswords&&isDecrypted">
             <v-card class="my-5 p-3 orange lighten-4" outlined>
               <v-card-title>No Passwords</v-card-title>
 
             </v-card>
           </div>
-          <div v-show="!hasNoPasswords" v-for="password in passwords" v-bind:key="password.name">
+          <div v-show="!hasNoPasswords&&isDecrypted" v-for="password in passwords" v-bind:key="password.name">
             <v-card class="my-5 pa-3 blue-grey lighten-4" outlined>
               <p>{{ password.name }}</p>
               <div v-for="(keyValue,keyName) in password" :key="keyName" class=" py-1   ">
@@ -43,25 +49,43 @@ export default {
   name: 'src-components-list-passwords',
   props: [],
   mounted() {
+    this.UpdateListener();
+    this.isDecrypted=this.getIsDecrypted()
     this.passwords = this.getPasswordList()
+
+
+
 
   },
   data() {
     return {
-      passwords: []
+      passwords: [],
+      isDecrypted:false
     }
   },
   methods: {
     ...mapGetters({
-      getPasswordList: "getPasswordList"
-    })
+      getPasswordList: "getPasswordList",
+      getIsDecrypted:"getIsDecrypted"
+    }),
+    UpdateListener(){
+      this.$root.$on("masterPassUpdate",()=>{
+        this.isDecrypted=this.getIsDecrypted()
+      })
+    }
 
   },
   computed: {
+
     hasNoPasswords(){
       return this.passwords.length===0
     },
 
+  },
+  watch:{
+    getIsDecrypted:{
+      deep:true,
+    }
   }
 }
 
