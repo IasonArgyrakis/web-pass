@@ -1,0 +1,12 @@
+{
+
+  "manifest_version": 3,
+  "name": "WebPass",
+  "version": "1.0",
+  "description": "A free Open-Source Password Manager ",
+  "options_page": "./dist/index.html",
+  "permissions": [
+    "storage"
+  ]
+
+}

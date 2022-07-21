@@ -99,9 +99,17 @@ export default {
     },
 
     savePassObj() {
-      var parsedobj = JSON.parse(JSON.stringify(this.passwordObj))
-      console.log(parsedobj)
-      this.savePassword(parsedobj)
+      let passwordAsObj = JSON.parse(JSON.stringify(this.passwordObj))
+      let passwordAsArray=Object.entries(passwordAsObj)
+      let notEmptyData=passwordAsArray.filter((item)=>{
+        //return only what is not empty
+        return item[1]!==""
+      })
+      let utcTimestamp = new Date().getTime();
+
+      let ready=Object.assign({"uid":utcTimestamp},Object.fromEntries(notEmptyData))
+
+      this.savePassword(ready)
       //this.$router.push("home")
 
 

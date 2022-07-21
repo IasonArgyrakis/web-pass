@@ -4,6 +4,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
+
           <div v-show="!isDecrypted">
             <v-card class="my-5 p-3 red " outlined>
               <v-card-title>You need to decrypt</v-card-title>
@@ -16,19 +17,53 @@
 
             </v-card>
           </div>
-          <div v-show="!hasNoPasswords&&isDecrypted" v-for="password in passwords" v-bind:key="password.name">
-            <v-card class="my-5 pa-3 blue-grey lighten-4" outlined>
-              <p>{{ password.name }}</p>
-              <div v-for="(keyValue,keyName) in password" :key="keyName" class=" py-1   ">
-                <v-text-field
-                    :label="keyName"
-                    max-width="100px"
-                    :value="keyValue"
-                    v-model="password[keyName]"
-                    class="px-2"
-                    persistent-hint
-                />
-
+          <div v-show="!hasNoPasswords&&isDecrypted">
+            <v-autocomplete
+                filled
+                :filter="passwordFilter"
+                :items="passwords"
+                label="Search">
+              <template
+                  slot="item"
+                  slot-scope="{ item }"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                    <v-list-item-subtitle>
+                      <v-container class="password-detail"
+                                   v-show="isNotKey(['uid','name'],keyName)"
+                                   v-for="(keyValue,keyName) in item" :key="keyName">
+                        <v-row no-gutters>
+                          <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
+                          <p :class=" ['col-7 sensitive  pt-2 ma-0 px-0 ml-1 mr-auto',{'blured-text':isNotKey(['email','url'],keyName)}]">
+                            {{ keyValue }}
+                          </p>
+                          <v-icon class="ml-2" medium
+                                  @click="toClipboard(keyValue)">
+                            mdi-content-copy
+                          </v-icon>
+                        </v-row>
+                      </v-container>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-autocomplete>
+          </div>
+          <div v-show="!hasNoPasswords&&isDecrypted" v-for="password in passwords" v-bind:key="password.uid">
+            <v-card elevation="6" class="mx-1 my-3 pa-2 ">
+              <div class="password-detail pa-1"
+                   v-show="isNotKey('uid',keyName)"
+                   v-for="(keyValue,keyName) in password" :key="keyName">
+                <div class="d-flex align-content-center">
+                  <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
+                  <p class="col-7  pt-2 ma-0 sensitive ml-1 mr-auto blured-text">{{ keyValue }}</p>
+                  <v-icon class="ml-2" medium
+                          @click="toClipboard(keyValue)">
+                    mdi-content-copy
+                  </v-icon>
+                </div>
               </div>
             </v-card>
           </div>
@@ -50,41 +85,59 @@ export default {
   props: [],
   mounted() {
     this.UpdateListener();
-    this.isDecrypted=this.getIsDecrypted()
+    this.isDecrypted = this.getIsDecrypted()
     this.passwords = this.getPasswordList()
-
-
 
 
   },
   data() {
     return {
       passwords: [],
-      isDecrypted:false
+      isDecrypted: false
     }
   },
   methods: {
+
     ...mapGetters({
       getPasswordList: "getPasswordList",
-      getIsDecrypted:"getIsDecrypted"
+      getIsDecrypted: "getIsDecrypted"
     }),
-    UpdateListener(){
-      this.$root.$on("masterPassUpdate",()=>{
-        this.isDecrypted=this.getIsDecrypted()
+    UpdateListener() {
+      this.$root.$on("masterPassUpdate", () => {
+        this.isDecrypted = this.getIsDecrypted()
       })
-    }
+    },
+    isNotKey(UnwantedKey, comparedValue) {
+      if (Array.isArray(UnwantedKey)) {
+        let toBool = UnwantedKey.map(item =>
+            item === comparedValue
+        )
+        return !toBool.includes(true)
+      } else
+        return UnwantedKey !== comparedValue;
+    },
+    toClipboard(value) {
+      navigator.clipboard.writeText(value);
+    },
+    passwordFilter(item, queryText) {
+      const keys = Object.keys(item).map(key => key.toLowerCase());
+      const values = Object.values(item).map(value => value.toString().toLowerCase());
+      const searchText = queryText.toLowerCase();
+      return (keys.findIndex(item => item.indexOf(searchText) > -1) > -1) ||
+          (values.findIndex(item => item.indexOf(searchText) > -1) > -1)
+    },
 
   },
   computed: {
 
-    hasNoPasswords(){
-      return this.passwords.length===0
+    hasNoPasswords() {
+      return this.passwords.length === 0
     },
 
   },
-  watch:{
-    getIsDecrypted:{
-      deep:true,
+  watch: {
+    getIsDecrypted: {
+      deep: true,
     }
   }
 }
@@ -94,6 +147,28 @@ export default {
 
 <style scoped lang="scss">
 .src-components-list-passwords {
+  & .password-detail:not(:last-child) {
+    border-bottom: 1px solid rgba(115, 110, 110, 0.4);
+  }
+
+  .password-detail {
+
+
+  }
 
 }
+
+.blured-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: transparent;
+  text-shadow: 0px 0px 18px black;
+  transition: text-shadow 0.1s linear;
+
+  &:hover {
+    text-shadow: 0px 0px 0px black;
+  }
+}
+
 </style>
