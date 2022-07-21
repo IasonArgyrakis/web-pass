@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import CryptoJs from "crypto-js";
+import CryptoJS from "crypto-js";
 
 
 Vue.use(Vuex)
@@ -50,25 +51,30 @@ const store = new Vuex.Store({
             }
         },
         loadPasswordsListFromStorage(state){
+            var CryptoJS = require("crypto-js");
             if (state.isDecrypted) {
 
-                if(chrome.storage.sync.get('Passlist')===null){
-                    console.log("No data found creating...")
-                    let encrypted=CryptoJs.AES.encrypt(JSON.stringify(state.PasswordList), state.masterPassword).toString();
-                   // window.localStorage.setItem("Passlist",encrypted)
-                    chrome.storage.sync.set({PassList:encrypted},function (){
-                        console.log("Creating On Chrome")
-                    });
-                }
-                else {
-                    console.log("Loading...")
-                }
+
+                chrome.storage.sync.get(['Passlist'], function(result) {
+                    console.log('Value currently is ' , result.Passlist);
+                    if(result.Passlist===undefined) {
+                        console.log("No data found creating...")
+                        let encrypted = CryptoJS.AES.encrypt(JSON.stringify(state.PasswordList), state.masterPassword).toString();
+                        chrome.storage.sync.set({PassList: encrypted}, function () {
+                            console.log("Creating On Chrome Storage")
+                        });
+                    }
+                });
+
 
                 chrome.storage.sync.get(['PassList'], function(result) {
                     console.log('Value currently is ' + result.PassList);
                     let ciphertext = result.PassList
-                    console.log("ciphertext Loaded")
-                    let bytes  = CryptoJs.AES.decrypt(ciphertext, state.masterPassword);
+                    console.log("ciphertext Loaded",state.masterPassword)
+                    console.log(ciphertext,CryptoJs.enc.Utf8)
+
+                    let bytes  = CryptoJS.AES.decrypt(ciphertext, state.masterPassword);
+                    console.log(bytes)
                     state.PasswordList=JSON.parse(bytes.toString(CryptoJs.enc.Utf8))
                     console.log( state.PasswordList)
                 });
