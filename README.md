@@ -1,4 +1,4 @@
-# web-pass2
+# web-pass
 
 ## Project setup
 ```

@@ -77,7 +77,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      savePassword: "savePassword"
+      savePassword: "savePassword",
+      savePasswordList:"savePasswordsList"
     }),
     getKey() {
       this.key = "pass123"
@@ -100,16 +101,15 @@ export default {
 
     savePassObj() {
       let passwordAsObj = JSON.parse(JSON.stringify(this.passwordObj))
-      let passwordAsArray=Object.entries(passwordAsObj)
-      let notEmptyData=passwordAsArray.filter((item)=>{
+      let passwordObjAsArray=Object.entries(passwordAsObj)
+      let notEmptyData=passwordObjAsArray.filter((item)=>{
         //return only what is not empty
         return item[1]!==""
       })
       let utcTimestamp = new Date().getTime();
-
       let ready=Object.assign({"uid":utcTimestamp},Object.fromEntries(notEmptyData))
-
       this.savePassword(ready)
+      this.savePasswordList();
       //this.$router.push("home")
 
 

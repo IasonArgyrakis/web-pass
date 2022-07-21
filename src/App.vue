@@ -20,7 +20,7 @@
           dense
           dark
           single-line
-          class="shrink mx-4"
+          class="shrink mx-4 text-input-blue"
           v-model="masterPassword"
       />
       <v-btn v-show="!getIsDecrypted" @click="decrypt">Unlock</v-btn>
@@ -49,14 +49,14 @@ export default {
   methods: {
 
     ...mapMutations({
-      setMasterPassword: "setMasterPassword"
+      setMasterPassword: "setMasterPassword",
+      loadPasswordsListFromStorage:"loadPasswordsListFromStorage"
     }),
     decrypt() {
       this.setMasterPassword(this.masterPassword)
+      this.loadPasswordsListFromStorage()
       this.$root.$emit("masterPassUpdate")
     },
-    encrypt() {
-    }
   },
   computed:{
   ...mapGetters({
@@ -72,3 +72,9 @@ export default {
   }
 };
 </script>
+<style scoped lang="scss">
+
+.text-input-blue .v-text-field__slot input {
+  color: #00f !important;
+}
+</style>
