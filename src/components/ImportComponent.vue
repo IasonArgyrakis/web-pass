@@ -7,7 +7,7 @@
         sm="12">
           <div class="mx-2" >
             <qrcode-vue :value="webHash"  :size="200" level="H" />
-            {{webHash}}
+            <p>{{webHash}}</p>
           </div>
 
         </v-col>
@@ -34,8 +34,7 @@ export default {
   components:{
     QrcodeVue
   },
-  mounted() {
-  },
+
   data() {
     return {
 

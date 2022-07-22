@@ -47,7 +47,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title ><v-btn text to="/sync-password">
+            <v-list-item-title ><v-btn text to="/sync-passwords">
               <v-icon>mdi-autorenew</v-icon>
               Sync Password</v-btn>
             </v-list-item-title>
@@ -57,6 +57,7 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
+
 
     <v-main>
       <router-view/>
