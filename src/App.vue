@@ -52,15 +52,14 @@ export default {
     passwords:[]
   }),
   methods: {
-
-
     ...mapMutations({
       setMasterPassword: "setMasterPassword",
-      loadPasswordsListFromStorage:"loadPasswordsListFromStorage"
+      loadPasswordsListFromStorage:"loadPasswordsListFromStorage",
+      decryptStorage:"decrypt"
     }),
     decrypt() {
       this.setMasterPassword(this.masterPassword)
-      this.$root.$emit("masterPassUpdate")
+      this.decryptStorage()
     },
   },
   computed:{
