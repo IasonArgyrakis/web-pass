@@ -99,9 +99,14 @@ export default {
       })
       let utcTimestamp = new Date().getTime();
       let ready=Object.assign({"uid":utcTimestamp},Object.fromEntries(notEmptyData))
+      console.log(Object.keys(ready).length)
+     if(Object.keys(ready).length>1){
       this.savePassword(ready)
       this.savePasswordList();
-      this.$router.push("home")
+      this.$router.push({name:"home"})
+     }else{
+       window.alert("You need to enter something...")
+     }
 
 
 
