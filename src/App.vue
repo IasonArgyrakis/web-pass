@@ -44,7 +44,7 @@ export default {
   name: 'App',
 
   beforeMount() {
-    // this.loadPasswordsListFromStorage()
+    this.loadPasswordsListFromStorage()
   },
 
   data: () => ({
@@ -52,16 +52,15 @@ export default {
     passwords:[]
   }),
   methods: {
-
-
     ...mapMutations({
       setMasterPassword: "setMasterPassword",
-      loadPasswordsListFromStorage:"loadPasswordsListFromStorage"
+      loadPasswordsListFromStorage:"loadPasswordsListFromStorage",
+      decryptStorage:"decrypt"
+
     }),
     decrypt() {
       this.setMasterPassword(this.masterPassword)
-      this.loadPasswordsListFromStorage()
-      this.$root.$emit("masterPassUpdate")
+      this.decryptStorage()
     },
   },
   computed:{

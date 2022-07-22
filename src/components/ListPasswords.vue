@@ -9,7 +9,7 @@
           <div>
             <v-autocomplete
                 filled
-                :disabled="!isDecrypted"
+                :disabled="!getIsDecrypted"
                 :filter="passwordFilter"
                 :items="getPasswordList"
                 label="Search">
@@ -41,15 +41,16 @@
               </template>
             </v-autocomplete>
 
-            <div v-if="isDecrypted">
-              <div v-show="!hasNoPasswords" v-for="password in passwords" v-bind:key="password.uid">
-                <v-card :disabled="!isDecrypted" elevation="6" class="mx-1 my-3 pa-2 ">
+            <div v-if="getIsDecrypted">
+              <div v-show="!hasNoPasswords" v-for="password in getPasswordList" v-bind:key="password.uid">
+                <v-card :disabled="!getIsDecrypted" elevation="6" class="mx-1 my-3 pa-2 ">
                   <div class="password-detail pa-1"
                        v-show="isNotKey('uid',keyName)"
                        v-for="(keyValue,keyName) in password" :key="keyName">
                     <div class="d-flex align-content-center">
                       <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
-                      <p :class="['col-7  pt-2 ma-0 sensitive ml-1 mr-auto',{'blured-text':isNotKey(['email','name'],keyName)}]" @click="toClipboard(keyValue)">
+                      <p :class="['col-7  pt-2 ma-0 sensitive ml-1 mr-auto',{'blured-text':isNotKey(['email','name'],keyName)}]"
+                         @click="toClipboard(keyValue)">
                         {{ keyValue }}</p>
                       <v-icon class="ml-2" medium
                               @click="toClipboard(keyValue)">
@@ -59,12 +60,12 @@
                   </div>
                 </v-card>
               </div>
-              <v-card v-show="hasNoPasswords"  color="amber  lighten-3 ">
+              <v-card v-show="hasNoPasswords" color="amber  lighten-3 ">
                 <v-card-title class="text--white">No Passwords</v-card-title>
               </v-card>
             </div>
-            <div v-if="!isDecrypted">
-              <v-card dark  color="red">
+            <div v-if="!getIsDecrypted">
+              <v-card dark color="red">
                 <v-card-title class="text--white">You Need to Decrypt First</v-card-title>
               </v-card>
             </div>
@@ -86,28 +87,13 @@ import {mapGetters} from "vuex"
 export default {
   name: 'src-components-list-passwords',
   props: [],
-  mounted() {
-    this.UpdateListener();
-    this.isDecrypted = this.getIsDecrypted()
-    this.passwords = this.getPasswordList
-  },
   data() {
     return {
-      passwords: [],
       isDecrypted: false
     }
   },
   methods: {
 
-    ...mapGetters({
-      getIsDecrypted: "getIsDecrypted"
-    }),
-    UpdateListener() {
-      this.$root.$on("masterPassUpdate", () => {
-        this.isDecrypted = this.getIsDecrypted()
-      })
-
-    },
     isNotKey(UnwantedKey, comparedValue) {
       if (Array.isArray(UnwantedKey)) {
         let toBool = UnwantedKey.map(item =>
@@ -130,19 +116,20 @@ export default {
 
   },
   computed: {
-
     hasNoPasswords() {
-      return this.passwords.length === 0
+      console.log(this.getPasswordList.length)
+      return this.getPasswordList.length === 0
     },
     ...mapGetters({
       getPasswordList: "getPasswordList",
+      getIsDecrypted: "getIsDecrypted"
     }),
 
   },
   watch: {
-    getIsDecrypted: {
-      deep: true,
-    },
+
+
+
   }
 }
 
