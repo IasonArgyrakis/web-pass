@@ -49,7 +49,7 @@
                        v-for="(keyValue,keyName) in password" :key="keyName">
                     <div class="d-flex align-content-center">
                       <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
-                      <p class="col-7  pt-2 ma-0 sensitive ml-1 mr-auto blured-text" @click="toClipboard(keyValue)">
+                      <p :class="['col-7  pt-2 ma-0 sensitive ml-1 mr-auto',{'blured-text':isNotKey(['email','name'],keyName)}]" @click="toClipboard(keyValue)">
                         {{ keyValue }}</p>
                       <v-icon class="ml-2" medium
                               @click="toClipboard(keyValue)">

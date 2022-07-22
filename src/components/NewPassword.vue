@@ -2,24 +2,25 @@
 
   <section class="src-components-new-password">
     <v-container>
-      <v-row class="mx-5">
-        <v-col cols="12  mt-1  br-2 rounded blue-grey lighten-3">
+      <v-row class="ma-2">
+        <v-col cols="12 br-2 rounded blue-grey ">
 
           <div v-for="(keyValue,keyName) in passwordObj" :key="keyName" class=" py-1   ">
             <v-text-field
+                dark
                 :label="keyName"
                 max-width="100px"
                 :value="keyValue"
                 v-model="passwordObj[keyName]"
-                class="px-2"
+                class="px-2 text-capitalize"
                 persistent-hint
             />
 
           </div>
 
         </v-col>
-        <v-col cols="12 blue-grey lighten-4 mt-2 rounded">
-          <v-combobox auto-select-first dense
+        <v-col cols="12 grey lighten-3 mt-2 rounded">
+          <v-combobox class="mt-4 " auto-select-first dense
                       label="Press Enter to select highlighted Option" :multiple=false v-model="newKeyName"
                       :items="this.keyValues"></v-combobox>
           <v-btn color="secondary" @click="addField()">
