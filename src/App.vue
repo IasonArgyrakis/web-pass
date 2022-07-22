@@ -44,7 +44,7 @@ export default {
   name: 'App',
 
   beforeMount() {
-    this.loadPasswordsListFromStorage()
+    // this.loadPasswordsListFromStorage()
   },
 
   data: () => ({
@@ -60,6 +60,7 @@ export default {
     }),
     decrypt() {
       this.setMasterPassword(this.masterPassword)
+      this.loadPasswordsListFromStorage()
       this.$root.$emit("masterPassUpdate")
     },
   },

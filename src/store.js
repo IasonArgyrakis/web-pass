@@ -1,6 +1,9 @@
 /* eslint-disable */
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as CryptoJS from 'crypto-js'
+
+
 
 
 Vue.use(Vuex)
@@ -26,7 +29,7 @@ const store = new Vuex.Store({
 
         savePassword(state, payload) {
             if (state.isDecrypted) {
-                let list=state.PasswordList;
+                let list = state.PasswordList;
                 list.push(payload)
             }
         },
@@ -35,8 +38,9 @@ const store = new Vuex.Store({
             if (state.isDecrypted) {
                 console.log(state.PasswordList)
 
-                localStorage.setItem("Passlist", JSON.stringify(state.PasswordList));
-
+                // Encrypt
+                var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(state.PasswordList), state.masterPassword).toString();
+                localStorage.setItem("Passlist", ciphertext);
                 console.log("Encrypted Data Saved")
             } else {
                 window.alert("You MUST set a master password")
@@ -53,7 +57,25 @@ const store = new Vuex.Store({
             }
         },
         loadPasswordsListFromStorage(state) {
-                state.PasswordList=JSON.parse(localStorage.getItem("Passlist"))||[]
+            let ciphertext
+            if(localStorage.getItem("Passlist")!==null){
+                console.log("old Data Found")
+                ciphertext=localStorage.getItem("Passlist")
+            }else {
+                const empty = []
+                const jsonString=JSON.stringify(empty)
+                ciphertext=CryptoJS.AES.encrypt(jsonString, state.masterPassword).toString();
+                console.log("starting Fresh",typeof jsonString,jsonString,ciphertext)
+            }
+
+            // Decrypt
+            var bytes = CryptoJS.AES.decrypt(ciphertext, state.masterPassword);
+            console.log("orignal dec",bytes.toString(CryptoJS.enc.Utf8));
+            var originalText = bytes.toString(CryptoJS.enc.Utf8);
+            console.log("orignal text",originalText); // 'my message'
+            let JsonObj=JSON.parse(originalText)
+            console.log(JsonObj.length)
+            state.PasswordList = JsonObj
         }
 
     }

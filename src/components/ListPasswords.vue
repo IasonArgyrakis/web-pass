@@ -143,9 +143,6 @@ export default {
     getIsDecrypted: {
       deep: true,
     },
-    getPasswordList: {
-      deep: true,
-    }
   }
 }
 
