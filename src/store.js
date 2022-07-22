@@ -21,7 +21,11 @@ const store = new Vuex.Store({
         },
         getIsDecrypted(state) {
             return state.isDecrypted;
-        }
+        },
+        getDataHash(){
+            return chrome.storage.sync.get(['Passlist']).then().Passlist;
+
+        },
     },
     mutations: {
 
@@ -32,12 +36,15 @@ const store = new Vuex.Store({
             }
         },
         savePasswordsList(state) {
-            //var CryptoJS = require("crypto-js");
+
             if (state.isDecrypted) {
                 // Encrypt
                 var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(state.PasswordList), state.masterPassword).toString();
-                localStorage.setItem("Passlist", ciphertext);
-                console.log("Encrypted Data Saved")
+                chrome.storage.sync.set({Passlist: ciphertext}, function() {
+                    console.log("Encrypted Data Saved")
+                });
+
+
             } else {
                 window.alert("You MUST set a master password")
             }
@@ -50,54 +57,54 @@ const store = new Vuex.Store({
                 window.alert("Your master password causes an error")
             }
         },
-        loadPasswordsListFromStorage(state) {
-            let ciphertext
-            if(localStorage.getItem("Passlist")!==null){
-                console.log("old Data Found")
-                ciphertext=localStorage.getItem("Passlist")
 
-            }else{
-                console.log("no data Found")
+        CheckForPasswordsListFromStorage() {
+            chrome.storage.sync.get(['Passlist'], function(result) {
+                if(result.Passlist!==undefined){
+                    console.log("Chrome Data Found ")
+                }
+                else{
+                    console.log("No data found")
+                }
+            });
 
-            }
-
-            // // Decrypt
-            // var bytes = CryptoJS.AES.decrypt(ciphertext, state.masterPassword);
-            // var originalText = bytes.toString(CryptoJS.enc.Utf8);
-            // let JsonObj=JSON.parse(originalText)
-            // state.PasswordList = JsonObj
         },
         decrypt(state){
+            chrome.storage.sync.get(['Passlist'], function(result) {
+                let ciphertext
 
 
-            let ciphertext
-            if(localStorage.getItem("Passlist")==null){
-                const empty = []
-                const jsonString=JSON.stringify(empty)
-                ciphertext=CryptoJS.AES.encrypt(jsonString, state.masterPassword).toString();
-                console.log("starting Fresh")
-                localStorage.setItem("Passlist", ciphertext);
-            }
-            ciphertext=localStorage.getItem("Passlist")
+                if(result.Passlist==undefined){
 
 
-            try {
-                //try_statements
-                // Decrypt
-                var bytes = CryptoJS.AES.decrypt(ciphertext, state.masterPassword);
-                var originalText = bytes.toString(CryptoJS.enc.Utf8);
-                let JsonObj=JSON.parse(originalText)
-                state.PasswordList = JsonObj
-                state.isDecrypted =true
-            } catch (error) {
-                console.error(error.message)
-                   window.alert("incorrect Master Pass re enter");
-                   window.location.reload()
-            }
+                    const empty = []
+                    const jsonString=JSON.stringify(empty)
+                    ciphertext=CryptoJS.AES.encrypt(jsonString, state.masterPassword).toString();
+                    chrome.storage.sync.set({Passlist: ciphertext}, function() {
+                        console.log("Started Fresh",ciphertext)
+                    });
 
+                }else{
 
+                    try {
+                        //try_statements
+                        // Decrypt
+                        var bytes = CryptoJS.AES.decrypt(result.Passlist, state.masterPassword);
+                        var originalText = bytes.toString(CryptoJS.enc.Utf8);
+                        let JsonObj=JSON.parse(originalText)
+                        state.PasswordList = JsonObj
+                        state.isDecrypted =true
+                    } catch (error) {
+                        console.error(error.message)
+                        window.alert("incorrect Master Pass re-enter");
+                        window.location.reload()
+                    }
 
-        }
+                }
+            });
+
+        },
+
 
     }
 

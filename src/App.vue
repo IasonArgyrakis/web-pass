@@ -73,7 +73,7 @@ export default {
   name: 'App',
 
   beforeMount() {
-    this.loadPasswordsListFromStorage()
+    this.CheckForPasswordsListFromStorage()
     if(this.$route.query.data!==undefined&&this.$route.query.data!==""){
       console.log(this.$route.query.data)
       localStorage.setItem("Passlist",this.$route.query.data)
@@ -90,7 +90,7 @@ export default {
   methods: {
     ...mapMutations({
       setMasterPassword: "setMasterPassword",
-      loadPasswordsListFromStorage:"loadPasswordsListFromStorage",
+      CheckForPasswordsListFromStorage:"CheckForPasswordsListFromStorage",
       decryptStorage:"decrypt"
     }),
     decrypt() {

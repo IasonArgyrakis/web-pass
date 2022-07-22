@@ -6,8 +6,8 @@
         <v-col xxl="3"
         sm="12">
           <div class="mx-2" >
-            <qrcode-vue :value="webHash"  :size="200" level="H" />
-            <p>{{webHash}}</p>
+            <qrcode-vue :value="getDataHash"  :size="200" level="H" />
+            <p>{{getDataHash}}</p>
           </div>
 
         </v-col>
@@ -27,6 +27,7 @@
 
 <script lang="js">
 import QrcodeVue from 'qrcode.vue'
+import {mapGetters} from "vuex";
 
 export default {
   name: 'import-component',
@@ -34,7 +35,9 @@ export default {
   components:{
     QrcodeVue
   },
-
+  created() {
+  console.log(async  awaitthis.getDataHash)
+  },
   data() {
     return {
 
@@ -50,10 +53,13 @@ export default {
 
   },
   computed: {
-    webHash(){
-      console.log('impo')
-      let data= localStorage.getItem('Passlist');
-      return (`${location.protocol}//${location.host}/#/?data=${data}`)
+    ...mapGetters({
+      getDataHash:"getDataHash"
+    }),
+     webHash() {
+      return "----"
+
+      //return (`${location.protocol}//${location.host}/#/?data=${ this.getDataHash}`)
     },
     webSync(){
       return this.$route.query.data
