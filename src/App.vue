@@ -1,15 +1,13 @@
 <template>
-  <v-app>
+  <v-app >
     <v-app-bar
         app
         color="primary"
-
         class="mb-3"
     >
-      <v-toolbar-title class="white--text">WebPass</v-toolbar-title>
-      <v-btn plain to="/">
-        <v-icon color="orange darken-2" class="ml-2 ">mdi-lock</v-icon>
-      </v-btn>
+      <v-app-bar-nav-icon  @click="drawer = !drawer" ></v-app-bar-nav-icon>
+
+
       <v-text-field
           :disabled="getIsDecrypted"
           :type="fieldType"
@@ -26,9 +24,39 @@
       <v-btn v-show="!getIsDecrypted" @click="decrypt">Unlock</v-btn>
 
       <v-spacer></v-spacer>
-      <v-btn v-show="getIsDecrypted" color="" to="/new-password">New Password</v-btn>
 
     </v-app-bar>
+    <v-navigation-drawer
+        v-model="drawer"
+        temporary
+        app
+    >
+      <v-list>
+        <v-list-item-group>
+
+          <v-list-item>
+            <v-list-item-title ><v-btn text to="/">
+              <v-icon>mdi-view-list</v-icon>
+              Passwords</v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title ><v-btn text to="/new-password">
+              <v-icon>mdi-plus</v-icon>
+              New Password</v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title ><v-btn text to="/sync-password">
+              <v-icon>mdi-autorenew</v-icon>
+              Sync Password</v-btn>
+            </v-list-item-title>
+          </v-list-item>
+
+
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
 
     <v-main>
       <router-view/>
@@ -45,9 +73,16 @@ export default {
 
   beforeMount() {
     this.loadPasswordsListFromStorage()
+    if(this.$route.query.data!==undefined&&this.$route.query.data!==""){
+      console.log(this.$route.query.data)
+      localStorage.setItem("Passlist",this.$route.query.data)
+      location.replace(`${location.protocol}//${location.host}/#/`)
+
+    }
   },
 
   data: () => ({
+    drawer: false,
     masterPassword: "",
     passwords:[]
   }),
@@ -61,6 +96,16 @@ export default {
       this.setMasterPassword(this.masterPassword)
       this.decryptStorage()
     },
+    deviceType () {
+      const ua = navigator.userAgent;
+      if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+        return "tablet";
+      }
+      else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+        return "mobile";
+      }
+      return "desktop";
+    }
   },
   computed:{
   ...mapGetters({

@@ -55,8 +55,10 @@ const store = new Vuex.Store({
             if(localStorage.getItem("Passlist")!==null){
                 console.log("old Data Found")
                 ciphertext=localStorage.getItem("Passlist")
+
             }else{
                 console.log("no data Found")
+
             }
 
             // // Decrypt
