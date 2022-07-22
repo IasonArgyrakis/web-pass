@@ -56,7 +56,6 @@ export default {
       setMasterPassword: "setMasterPassword",
       loadPasswordsListFromStorage:"loadPasswordsListFromStorage",
       decryptStorage:"decrypt"
-
     }),
     decrypt() {
       this.setMasterPassword(this.masterPassword)

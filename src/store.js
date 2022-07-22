@@ -73,7 +73,7 @@ const store = new Vuex.Store({
                 const empty = []
                 const jsonString=JSON.stringify(empty)
                 ciphertext=CryptoJS.AES.encrypt(jsonString, state.masterPassword).toString();
-                console.log("starting Fresh",typeof jsonString,jsonString,ciphertext)
+                console.log("starting Fresh")
                 localStorage.setItem("Passlist", ciphertext);
             }
             ciphertext=localStorage.getItem("Passlist")

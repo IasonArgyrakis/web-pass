@@ -117,7 +117,6 @@ export default {
   },
   computed: {
     hasNoPasswords() {
-      console.log(this.getPasswordList.length)
       return this.getPasswordList.length === 0
     },
     ...mapGetters({
