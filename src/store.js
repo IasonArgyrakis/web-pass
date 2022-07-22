@@ -1,8 +1,6 @@
 /* eslint-disable */
 import Vue from 'vue'
 import Vuex from 'vuex'
-import CryptoJs from "crypto-js";
-import CryptoJS from "crypto-js";
 
 
 Vue.use(Vuex)
@@ -13,7 +11,7 @@ const store = new Vuex.Store({
         return {
             isDecrypted: false,
             masterPassword: "",
-            PasswordList: []
+            PasswordList: [],
         }
     },
     getters: {
@@ -28,13 +26,34 @@ const store = new Vuex.Store({
 
         savePassword(state, payload) {
             if (state.isDecrypted) {
-                let list = state.PasswordList
+                console.log("pre-push_payload",typeof payload,payload)
+                console.log("pre-push_List",typeof state.PasswordList,state.PasswordList)
+                let list=state.PasswordList;
                 list.push(payload)
+                console.log("after-push_List",typeof state.PasswordList,state.PasswordList)
+                console.log(list);
+                console.log("after-push",typeof state.PasswordList,state.PasswordList)
             } else {
                 window.alert("You need to set the master pass before you can save")
             }
         },
+        savePasswordsList(state) {
+            //var CryptoJS = require("crypto-js");
+            if (state.isDecrypted) {
+                console.log(state.PasswordList)
+                //let encrypted= JSON.stringify(state.PasswordList)
+                // let encrypted = CryptoJS.AES.encrypt(JSON.stringify(state.PasswordList), state.masterPassword).toString();
+                localStorage.setItem("Passlist", JSON.stringify(state.PasswordList));
+                // chrome.storage.local.set({"Passlist": encrypted}, function () {
+                //     console.log('Value is set to ' + encrypted);
+                // });
+                console.log("Encrypted Data Saved")
+            } else {
+                window.alert("You MUST set a master password")
+            }
+        },
         setMasterPassword(state, payload) {
+            console.log("run")
             payload = payload.toString()
             if (payload !== null || payload !== "") {
                 state.masterPassword = payload
@@ -43,44 +62,37 @@ const store = new Vuex.Store({
                 window.alert("Your master password causes an error")
             }
         },
-        savePasswordsList(state) {
-            if (state.isDecrypted) {
-                let encrypted = CryptoJs.AES.encrypt(JSON.stringify(state.PasswordList), state.masterPassword).toString();
-                window.localStorage.setItem("Passlist", encrypted)
-                console.log("Encrypted Data Saved")
-            } else {
-                window.alert("You MUST set a master password")
-            }
-        },
         loadPasswordsListFromStorage(state) {
-            var CryptoJS = require("crypto-js");
-            if (state.isDecrypted) {
+
+                console.log("load-local",localStorage.getItem("Passlist"))
+                state.PasswordList=JSON.parse(localStorage.getItem("Passlist"))||[]
+                console.log("load", state.PasswordList)
+                // chrome.storage.local.get(['Passlist'], function (result) {
+                //     let ciphertext = result.Passlist
+                //     if (ciphertext === undefined) {
+                //         console.log("Cipher Undefinded")
+                //         state.PasswordList = [];
+                //     } else {
+                //         console.log("ciphertext Loaded");
+                //         console.log(ciphertext)
+                //         state.PasswordList=ciphertext
+                //         // const CryptoJS = require("crypto-js");
+                //         // const cryptkey = CryptoJS.enc.Utf8.parse(state.masterPassword);
+                //         // const crypted = CryptoJS.enc.Base64.parse(ciphertext);
+                //         //
+                //         // var decrypt = CryptoJS.AES.decrypt({ciphertext: crypted}, cryptkey, {
+                //         //     iv: CryptoJS.enc.Hex.parse('00000000000000000000000000000000'),
+                //         //     mode: CryptoJS.mode.CBC,
+                //         //     padding: CryptoJS.pad.Pkcs7
+                //         // });
+                //         //
+                //         // console.log(decrypt.toString());
+                //         // state.PasswordList = JSON.parse(decrypt.toString(CryptoJS.enc.Utf8))
+                //     }
+                //
+                // });
 
 
-                chrome.storage.sync.get(['Passlist'], function (result) {
-                    console.log(result.Passlist);
-                    let passlist = result.Passlist
-                    if (passlist === undefined) {
-                        console.log("No data found creating...")
-                        let encrypted = CryptoJS.AES.encrypt(JSON.stringify(state.PasswordList), state.masterPassword).toString();
-                        chrome.storage.sync.set({PassList: encrypted}, function () {
-                            console.log("Creating On Chrome Storage")
-                        });
-                    } else {
-                        console.log("Data found")
-                        let ciphertext = passlist
-                        console.log("ciphertext Loaded")
-                        let bytes = CryptoJS.AES.decrypt(ciphertext, state.masterPassword);
-                        console.log(bytes)
-                        state.PasswordList = JSON.parse(bytes.toString(CryptoJs.enc.Utf8))
-                        console.log(state.PasswordList)
-                    }
-                });
-
-
-            } else {
-                window.alert("You MUST set a master password In order To decrypt")
-            }
 
 
         }

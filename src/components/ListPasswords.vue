@@ -3,25 +3,15 @@
   <section class="src-components-list-passwords">
     <v-container>
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12 no-gutters">
 
-          <div v-show="!isDecrypted">
-            <v-card class="my-5 p-3 red " outlined>
-              <v-card-title>You need to decrypt</v-card-title>
 
-            </v-card>
-          </div>
-          <div v-show="hasNoPasswords&&isDecrypted">
-            <v-card class="my-5 p-3 orange lighten-4" outlined>
-              <v-card-title>No Passwords</v-card-title>
-
-            </v-card>
-          </div>
-          <div v-show="!hasNoPasswords&&isDecrypted">
+          <div>
             <v-autocomplete
                 filled
+                :disabled="!isDecrypted"
                 :filter="passwordFilter"
-                :items="passwords"
+                :items="getPasswordList"
                 label="Search">
               <template
                   slot="item"
@@ -50,23 +40,36 @@
                 </v-list-item>
               </template>
             </v-autocomplete>
-          </div>
-          <div v-show="!hasNoPasswords&&isDecrypted" v-for="password in passwords" v-bind:key="password.uid">
-            <v-card elevation="6" class="mx-1 my-3 pa-2 ">
-              <div class="password-detail pa-1"
-                   v-show="isNotKey('uid',keyName)"
-                   v-for="(keyValue,keyName) in password" :key="keyName">
-                <div class="d-flex align-content-center">
-                  <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
-                  <p class="col-7  pt-2 ma-0 sensitive ml-1 mr-auto blured-text">{{ keyValue }}</p>
-                  <v-icon class="ml-2" medium
-                          @click="toClipboard(keyValue)">
-                    mdi-content-copy
-                  </v-icon>
-                </div>
+
+            <div v-if="isDecrypted">
+              <div v-show="!hasNoPasswords" v-for="password in passwords" v-bind:key="password.uid">
+                <v-card :disabled="!isDecrypted" elevation="6" class="mx-1 my-3 pa-2 ">
+                  <div class="password-detail pa-1"
+                       v-show="isNotKey('uid',keyName)"
+                       v-for="(keyValue,keyName) in password" :key="keyName">
+                    <div class="d-flex align-content-center">
+                      <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
+                      <p class="col-7  pt-2 ma-0 sensitive ml-1 mr-auto blured-text" @click="toClipboard(keyValue)">
+                        {{ keyValue }}</p>
+                      <v-icon class="ml-2" medium
+                              @click="toClipboard(keyValue)">
+                        mdi-content-copy
+                      </v-icon>
+                    </div>
+                  </div>
+                </v-card>
               </div>
-            </v-card>
+              <v-card v-show="hasNoPasswords"  color="amber  lighten-3 ">
+                <v-card-title class="text--white">No Passwords</v-card-title>
+              </v-card>
+            </div>
+            <div v-if="!isDecrypted">
+              <v-card dark  color="red">
+                <v-card-title class="text--white">You Need to Decrypt First</v-card-title>
+              </v-card>
+            </div>
           </div>
+
 
         </v-col>
 
@@ -86,9 +89,7 @@ export default {
   mounted() {
     this.UpdateListener();
     this.isDecrypted = this.getIsDecrypted()
-    this.passwords = this.getPasswordList()
-
-
+    this.passwords = this.getPasswordList
   },
   data() {
     return {
@@ -99,13 +100,13 @@ export default {
   methods: {
 
     ...mapGetters({
-      getPasswordList: "getPasswordList",
       getIsDecrypted: "getIsDecrypted"
     }),
     UpdateListener() {
       this.$root.$on("masterPassUpdate", () => {
         this.isDecrypted = this.getIsDecrypted()
       })
+
     },
     isNotKey(UnwantedKey, comparedValue) {
       if (Array.isArray(UnwantedKey)) {
@@ -133,10 +134,16 @@ export default {
     hasNoPasswords() {
       return this.passwords.length === 0
     },
+    ...mapGetters({
+      getPasswordList: "getPasswordList",
+    }),
 
   },
   watch: {
     getIsDecrypted: {
+      deep: true,
+    },
+    getPasswordList: {
       deep: true,
     }
   }

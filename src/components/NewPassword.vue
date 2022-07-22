@@ -54,7 +54,6 @@
 </template>
 
 <script lang="js">
-import CryptoJs from "crypto-js"
 import {mapMutations} from "vuex"
 
 export default {
@@ -90,15 +89,6 @@ export default {
       Object.assign(this.passwordObj, {password: ""})
       this.$forceUpdate();
     },
-
-
-    generateHashValue(password) {
-
-      let passHash = CryptoJs.AES.encrypt(password, this.key).toString()
-      return passHash
-
-    },
-
     savePassObj() {
       let passwordAsObj = JSON.parse(JSON.stringify(this.passwordObj))
       let passwordObjAsArray=Object.entries(passwordAsObj)
@@ -108,6 +98,7 @@ export default {
       })
       let utcTimestamp = new Date().getTime();
       let ready=Object.assign({"uid":utcTimestamp},Object.fromEntries(notEmptyData))
+      console.log("pre-save",typeof ready,ready)
       this.savePassword(ready)
       this.savePasswordList();
       //this.$router.push("home")

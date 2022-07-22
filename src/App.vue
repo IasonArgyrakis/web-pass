@@ -43,10 +43,16 @@ import {mapGetters, mapMutations} from "vuex";
 export default {
   name: 'App',
 
+  beforeMount() {
+    this.loadPasswordsListFromStorage()
+  },
+
   data: () => ({
-    masterPassword: ""
+    masterPassword: "",
+    passwords:[]
   }),
   methods: {
+
 
     ...mapMutations({
       setMasterPassword: "setMasterPassword",
@@ -54,7 +60,6 @@ export default {
     }),
     decrypt() {
       this.setMasterPassword(this.masterPassword)
-      this.loadPasswordsListFromStorage()
       this.$root.$emit("masterPassUpdate")
     },
   },
