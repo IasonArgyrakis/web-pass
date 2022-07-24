@@ -1,9 +1,7 @@
-<template lang="html">
-
+<template>
   <section class="src-components-edit-password">
     <h1>src-components-edit-password Component</h1>
   </section>
-
 </template>
 
 <script lang="js">
@@ -26,12 +24,9 @@
 
     }
 }
-
-
 </script>
 
 <style scoped lang="scss">
-  .src-components-edit-password {
-
-  }
+.src-components-edit-password {
+}
 </style>

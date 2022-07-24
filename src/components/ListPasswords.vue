@@ -1,36 +1,51 @@
 <template lang="html">
-
   <section class="src-components-list-passwords">
     <v-container>
       <v-row>
         <v-col cols="12 no-gutters">
-
-
           <div>
             <v-autocomplete
-                filled
-                :disabled="!getIsDecrypted"
-                :filter="passwordFilter"
-                :items="getPasswordList"
-                label="Search">
-              <template
-                  slot="item"
-                  slot-scope="{ item }"
-              >
+              filled
+              :disabled="!getIsDecrypted"
+              :filter="passwordFilter"
+              :items="getPasswordList"
+              label="Search"
+            >
+              <template slot="item" slot-scope="{ item }">
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>{{ item.name }}</v-list-item-title>
                     <v-list-item-subtitle>
-                      <v-container class="password-detail"
-                                   v-show="isNotKey(['uid','name'],keyName)"
-                                   v-for="(keyValue,keyName) in item" :key="keyName">
+                      <v-container
+                        class="password-detail"
+                        v-show="isNotKey(['uid', 'name'], keyName)"
+                        v-for="(keyValue, keyName) in item"
+                        :key="keyName"
+                      >
                         <v-row no-gutters>
-                          <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
-                          <p :class=" ['col-7 sensitive  pt-2 ma-0 px-0 ml-1 mr-auto',{'blured-text':isNotKey(['email','url'],keyName)}]">
+                          <p
+                            class="col-3 pt-2 ma-0 px-0 text-end text--secondary text-capitalize"
+                          >
+                            {{ keyName }}
+                          </p>
+                          <p
+                            :class="[
+                              'col-7 sensitive  pt-2 ma-0 px-0 ml-1 mr-auto',
+                              {
+                                'blured-text': isNotKey(
+                                  ['email', 'url'],
+                                  keyName
+                                ),
+                              },
+                            ]"
+                          >
                             {{ keyValue }}
                           </p>
-                          <v-icon class="ml-2" medium
-                                  @click="toClipboard(keyValue)">
+                          <v-icon
+                            class="ml-2"
+                            medium
+                            @click="toClipboard(keyValue)"
+                          >
                             mdi-content-copy
                           </v-icon>
                         </v-row>
@@ -42,18 +57,44 @@
             </v-autocomplete>
 
             <div v-if="getIsDecrypted">
-              <div v-show="!hasNoPasswords" v-for="password in getPasswordList" v-bind:key="password.uid">
-                <v-card :disabled="!getIsDecrypted" elevation="6" class="mx-1 my-3 pa-2 ">
-                  <div class="password-detail pa-1"
-                       v-show="isNotKey('uid',keyName)"
-                       v-for="(keyValue,keyName) in password" :key="keyName">
+              <div
+                v-show="!hasNoPasswords"
+                v-for="password in getPasswordList"
+                v-bind:key="password.uid"
+              >
+                <v-card
+                  :disabled="!getIsDecrypted"
+                  elevation="6"
+                  class="mx-1 my-3 pa-2"
+                >
+                  <div
+                    class="password-detail pa-1"
+                    v-show="isNotKey('uid', keyName)"
+                    v-for="(keyValue, keyName) in password"
+                    :key="keyName"
+                  >
                     <div class="d-flex align-content-center">
-                      <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
-                      <p :class="['col-7  pt-2 ma-0 sensitive ml-1 mr-auto',{'blured-text':isNotKey(['email','name'],keyName)}]"
-                         @click="toClipboard(keyValue)">
-                        {{ keyValue }}</p>
-                      <v-icon class="ml-2" medium
-                              @click="toClipboard(keyValue)">
+                      <p
+                        class="col-3 pt-2 ma-0 px-0 text-end text--secondary text-capitalize"
+                      >
+                        {{ keyName }}
+                      </p>
+                      <p
+                        :class="[
+                          'col-7  pt-2 ma-0 sensitive ml-1 mr-auto',
+                          {
+                            'blured-text': isNotKey(['email', 'name'], keyName),
+                          },
+                        ]"
+                        @click="toClipboard(keyValue)"
+                      >
+                        {{ keyValue }}
+                      </p>
+                      <v-icon
+                        class="ml-2"
+                        medium
+                        @click="toClipboard(keyValue)"
+                      >
                         mdi-content-copy
                       </v-icon>
                     </div>
@@ -66,19 +107,16 @@
             </div>
             <div v-if="!getIsDecrypted">
               <v-card dark color="red">
-                <v-card-title class="text--white">You Need to Decrypt First</v-card-title>
+                <v-card-title class="text--white"
+                  >You Need to Decrypt First</v-card-title
+                >
               </v-card>
             </div>
           </div>
-
-
         </v-col>
-
       </v-row>
-
     </v-container>
   </section>
-
 </template>
 
 <script lang="js">
@@ -131,8 +169,6 @@ export default {
 
   }
 }
-
-
 </script>
 
 <style scoped lang="scss">
@@ -142,10 +178,7 @@ export default {
   }
 
   .password-detail {
-
-
   }
-
 }
 
 .blured-text {
@@ -160,5 +193,4 @@ export default {
     text-shadow: 0px 0px 0px black;
   }
 }
-
 </style>

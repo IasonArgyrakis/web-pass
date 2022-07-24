@@ -1,9 +1,7 @@
 <template lang="html">
-
   <section class="src-views-new-password-view">
-    <src-components-new-password/>
+    <src-components-new-password />
   </section>
-
 </template>
 
 <script lang="js">
@@ -14,26 +12,19 @@
     components: {SrcComponentsNewPassword},
     props: [],
     mounted () {
-
     },
     data () {
       return {
-
       }
     },
     methods: {
-
     },
     computed: {
-
     }
 }
-
-
 </script>
 
 <style scoped lang="scss">
-  .src-views-new-password-view {
-
-  }
+.src-views-new-password-view {
+}
 </style>
