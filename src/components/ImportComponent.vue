@@ -3,11 +3,11 @@
   <section class="import-component">
     <v-container>
       <v-row>
-        <v-col xxl="3"
+        <v-col cols="12" xxl="3"
         sm="12">
           <div class="mx-2" >
-            <qrcode-vue :value="webHash"  :size="200" level="H" />
-            <p>{{webHash}}</p>
+
+
           </div>
 
         </v-col>
@@ -26,13 +26,12 @@
 </template>
 
 <script lang="js">
-import QrcodeVue from 'qrcode.vue'
 
 export default {
   name: 'import-component',
   props: [],
   components:{
-    QrcodeVue
+
   },
 
   data() {
