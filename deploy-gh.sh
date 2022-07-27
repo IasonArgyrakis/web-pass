@@ -28,6 +28,5 @@ echo "Pushed to GitHub Page Completed"
 git checkout master
 
 echo "Back To master"
-# delete branch locally
-git branch -d gh-pages
+
 echo "Completed"
