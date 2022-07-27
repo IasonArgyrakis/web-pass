@@ -11,13 +11,12 @@
 
 
 import HeaderComponent from "@/components/HeaderComponent";
-import {mapGetters} from "vuex";
+
 
 export default {
   name: 'App',
   components: {HeaderComponent},
   beforeMount() {
-    this.loadPasswordsListFromStorage()
     if(this.$route.query.data!==undefined&&this.$route.query.data!==""){
       console.log(this.$route.query.data)
       localStorage.setItem("Passlist",this.$route.query.data)
@@ -31,9 +30,7 @@ export default {
 
   }),
   methods: {
-    ...mapGetters({
-      loadPasswordsListFromStorage:"getPasswordsListFromStorage",
-    })
+
   },
   computed:{
 

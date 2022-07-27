@@ -15,18 +15,19 @@ const store = new Vuex.Store({
             masterPassword: "",
             PasswordList: [],
             EmailList:[],
+            previousDataExist:false
         }
     },
     getters: {
-        getPasswordsListFromStorage(state) {
-            let ciphertext
+        getPreviousDataExistence(state) {
             if(localStorage.getItem("Passlist")!==null){
-                console.log("old Data Found")
-                ciphertext=localStorage.getItem("Passlist")
-
+                console.log("data Found")
+                state.previousDataExist=true
+                return state.previousDataExist
             }else{
                 console.log("no data Found")
-
+                state.previousDataExist=false
+                return state.previousDataExist
             }
         },
         getPasswordList(state) {
