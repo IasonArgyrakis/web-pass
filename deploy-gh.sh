@@ -3,6 +3,12 @@
 # abort on errors
 set -e
 
+# delete branch locally
+git branch -d gh-pages
+
+#delete branch remotely
+git push origin --delete gh-pages
+
 
 echo "Deleting old"
 rm -rf dist
