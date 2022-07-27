@@ -1,7 +1,7 @@
 const {defineConfig} = require('@vue/cli-service')
-var githubPage = require('./package').name
+const githubPage = require('./package').name
 module.exports = defineConfig({
-    publicPath: githubPage.name,
+    publicPath: githubPage,
     transpileDependencies: [
         'vuetify'
     ],
