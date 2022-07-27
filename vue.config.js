@@ -1,13 +1,12 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
+  publicPath:"/web-pass",
   transpileDependencies: [
     'vuetify'
   ],
   configureWebpack:{
     devtool: 'source-map'
   },
-  publicPath: process.env.NODE_ENV === 'production'
-      ? '/web-pass/'
-      : '/'
+
 
 })
