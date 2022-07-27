@@ -2,11 +2,9 @@
 
 An OpenSource password manager for Google Chrome.
 
+## You can find a working demo here
 
-<img src="./images/unlocked.png" alt="drawing" width="904" />
-<img src="./images/passwordCreation.png" alt="drawing" width="905" />
-<img src="./images/locked.png" alt="drawing" width="904" />
-<img src="./images/noPasswords.png" alt="drawing" width="904" />
+https://iasonargyrakis.github.io/web-pass/#/
 
 
 
