@@ -9,22 +9,60 @@
       <v-app-bar-nav-icon v-show="isMobile" class="mobileNavicon" @click="onClickNavIcon"/>
 
 
-      <v-text-field
-          :disabled="getIsDecrypted"
-          :type="fieldType"
-          hide-details
-          placeholder="Master"
-          filled
-          rounded
-          dense
-          dark
-          single-line
-          class="shrink mx-4 text-input-blue"
-          v-model="masterPassword"
-      />
-      <v-btn v-show="!getIsDecrypted" @click="decrypt">Unlock</v-btn>
 
-      <v-spacer></v-spacer>
+        <v-text-field
+            :type="fieldType"
+            hide-details
+            placeholder="Master"
+            filled
+            rounded
+            dense
+            dark
+            single-line
+            class="shrink mx-4 text-input-blue"
+            v-model="masterPassword"
+        />
+        <v-btn v-show="!getIsDecrypted" @click="decrypt">Unlock</v-btn>
+        <v-autocomplete
+            hide-details
+            single-line
+            filled
+            rounded
+            dense
+            dark
+            class=" my-auto"
+            v-if="getIsDecrypted"
+            :filter="passwordFilter"
+            :items="getPasswordList"
+            label="Search">
+          <template
+              slot="item"
+              slot-scope="{ item }"
+          >
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-container class="password-detail"
+                               v-show="isNotKey(['uid','name'],keyName)"
+                               v-for="(keyValue,keyName) in item" :key="keyName">
+                    <v-row no-gutters>
+                      <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
+                      <p :class=" ['col-7 sensitive  pt-2 ma-0 px-0 ml-1 mr-auto',{'blured-text':isNotKey(['email','url'],keyName)}]">
+                        {{ keyValue }}
+                      </p>
+                      <v-icon class="ml-2" medium
+                              @click="toClipboard(keyValue)">
+                        mdi-content-copy
+                      </v-icon>
+                    </v-row>
+                  </v-container>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-autocomplete>
+
 
     </v-app-bar>
 
@@ -43,7 +81,8 @@
             <div v-bind="attrs"
                  v-on="on" class="d-flex align-center justify-center pa-2 mx-auto">
               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                <path fill="green" d="M12 1L3 5V11C3 16.5 6.8 21.7 12 23C17.2 21.7 21 16.5 21 11V5L12 1M16 15.8C16 16.4 15.4 17 14.7 17H9.2C8.6 17 8 16.4 8 15.7V12.2C8 11.6 8.6 11 9.2 11V8.5C9.2 7.1 10.6 6 12 6S14.8 7.1 14.8 8.5V9H13.5V8.5C13.5 7.7 12.8 7.2 12 7.2S10.5 7.7 10.5 8.5V11H14.8C15.4 11 16 11.6 16 12.3V15.8Z" />
+                <path fill="green"
+                      d="M12 1L3 5V11C3 16.5 6.8 21.7 12 23C17.2 21.7 21 16.5 21 11V5L12 1M16 15.8C16 16.4 15.4 17 14.7 17H9.2C8.6 17 8 16.4 8 15.7V12.2C8 11.6 8.6 11 9.2 11V8.5C9.2 7.1 10.6 6 12 6S14.8 7.1 14.8 8.5V9H13.5V8.5C13.5 7.7 12.8 7.2 12 7.2S10.5 7.7 10.5 8.5V11H14.8C15.4 11 16 11.6 16 12.3V15.8Z"/>
               </svg>
             </div>
           </template>
@@ -51,13 +90,13 @@
         </v-tooltip>
 
 
-
         <v-tooltip v-if="security==='encrypted'" bottom>
           <template v-slot:activator="{ on, attrs }">
             <div v-bind="attrs"
                  v-on="on" class="d-flex align-center justify-center pa-2 mx-auto">
               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                <path fill="red" d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.1 14.8,9.5V11C15.4,11 16,11.6 16,12.3V15.8C16,16.4 15.4,17 14.7,17H9.2C8.6,17 8,16.4 8,15.7V12.2C8,11.6 8.6,11 9.2,11V9.5C9.2,8.1 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z" />
+                <path fill="red"
+                      d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.1 14.8,9.5V11C15.4,11 16,11.6 16,12.3V15.8C16,16.4 15.4,17 14.7,17H9.2C8.6,17 8,16.4 8,15.7V12.2C8,11.6 8.6,11 9.2,11V9.5C9.2,8.1 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z"/>
               </svg>
             </div>
           </template>
@@ -174,6 +213,18 @@ export default {
     ...mapGetters({
       getDeviceTypeIsMobile: "getDeviceTypeIsMobile",
     }),
+    isNotKey(UnwantedKey, comparedValue) {
+      if (Array.isArray(UnwantedKey)) {
+        let toBool = UnwantedKey.map(item =>
+            item === comparedValue
+        )
+        return !toBool.includes(true)
+      } else
+        return UnwantedKey !== comparedValue;
+    },
+    toClipboard(value) {
+      navigator.clipboard.writeText(value);
+    },
     onClickNavIcon() {
       console.log("nav.ico")
       this.isDrawerActive = true
@@ -182,13 +233,22 @@ export default {
       this.setMasterPassword(this.masterPassword)
       this.decryptStorage()
     },
+    passwordFilter(item, queryText) {
+      const keys = Object.keys(item).map(key => key.toLowerCase());
+      const values = Object.values(item).map(value => value.toString().toLowerCase());
+      const searchText = queryText.toLowerCase();
+      return (keys.findIndex(item => item.indexOf(searchText) > -1) > -1) ||
+          (values.findIndex(item => item.indexOf(searchText) > -1) > -1)
+    },
 
   },
   computed: {
     ...mapGetters({
       getIsDecrypted: "getIsDecrypted",
       hasPreviousData: "getPreviousDataExistence",
+      getPasswordList: "getPasswordList",
     }),
+
     security() {
       let status = "no-data"
       if (this.hasPreviousData) {
@@ -227,4 +287,18 @@ export default {
 .header-component {
 
 }
+
+.blured-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: transparent;
+  text-shadow: 0px 0px 18px black;
+  transition: text-shadow 0.1s linear;
+
+  &:hover {
+    text-shadow: 0px 0px 0px black;
+  }
+}
+
 </style>
