@@ -2,9 +2,7 @@
 
 # abort on errors
 set -e
-git add -A
-git commit -m "Deployed to GitHub Pages"
-git push
+
 
 echo "Deleting old"
 rm -rf dist
@@ -12,6 +10,10 @@ echo "Build Started"
 # build
 npm run build
 echo "Build Completed"
+git add -A
+git commit -m "Deployed to GitHub Pages"
+git push
+
 git subtree push --prefix dist origin gh-pages
 git checkout gh-pages
 git push -f
