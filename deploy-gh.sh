@@ -6,8 +6,8 @@ set -e
 git checkout gh-pages
 
 rm -rf index.html css/ js/
+git add .
 git commit -m "removed old build"
-
 git push
 
 
