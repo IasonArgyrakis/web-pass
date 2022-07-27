@@ -10,6 +10,8 @@ git add .
 git commit -m "removed old build"
 git push
 
+git checkout master
+
 
 # delete branch locally
 git branch -d gh-pages
