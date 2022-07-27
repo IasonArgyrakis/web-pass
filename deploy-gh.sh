@@ -3,11 +3,10 @@
 # abort on errors
 set -e
 
-# delete branch locally
-git branch -d gh-pages
+
 
 #delete branch remotely
-git push origin --delete gh-pages
+#git push origin --delete gh-pages
 
 
 echo "Deleting old"
@@ -23,8 +22,12 @@ git push
 git subtree push --prefix dist origin gh-pages
 git checkout gh-pages
 git push -f
+
+
 echo "Pushed to GitHub Page Completed"
 git checkout master
-echo "Back To master"
 
+echo "Back To master"
+# delete branch locally
+git branch -d gh-pages
 echo "Completed"
