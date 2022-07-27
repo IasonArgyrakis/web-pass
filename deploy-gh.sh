@@ -3,20 +3,20 @@
 # abort on errors
 set -e
 
-git checkout gh-pages
-
-rm -rf index.html css/ js/
-git add .
-git commit -m "removed old build"
-git push
-
-git checkout master
-
-
-# delete branch locally
-git branch -d gh-pages
-#delete branch remotely
-git push origin --delete gh-pages
+#git checkout gh-pages
+#
+#rm -rf index.html css/ js/
+#git add .
+#git commit -m "removed old build"
+#git push
+#
+#git checkout master
+#
+#
+## delete branch locally
+#git branch -d gh-pages
+##delete branch remotely
+#git push origin --delete gh-pages
 
 
 echo "Deleting old"
