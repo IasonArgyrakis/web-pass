@@ -19,7 +19,7 @@ export default {
   beforeMount() {
     if(this.$route.query.data!==undefined&&this.$route.query.data!==""){
       console.log(this.$route.query.data)
-      console.log("smth new 2")
+      console.log("smth new 3")
       localStorage.setItem("Passlist",this.$route.query.data)
       location.replace(`${location.protocol}//${location.host}/#/`)
 
