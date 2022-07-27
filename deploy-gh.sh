@@ -2,9 +2,7 @@
 
 # abort on errors
 set -e
-git checkout gh-pages
-git pull
-git checkout master
+
 
 echo "Deleting old"
 rm -rf dist
