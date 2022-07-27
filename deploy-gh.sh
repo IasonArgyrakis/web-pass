@@ -9,6 +9,7 @@ npm run build
 echo "Build Completed"
 git subtree push --prefix dist origin gh-pages
 git checkout gh-pages
-git push
+git push -f
+git checkout master
 
 echo "Completed"
