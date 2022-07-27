@@ -17,9 +17,9 @@ export default {
   name: 'App',
   components: {HeaderComponent},
   beforeMount() {
+    console.log("smthnew")
     if(this.$route.query.data!==undefined&&this.$route.query.data!==""){
       console.log(this.$route.query.data)
-      console.log("smth new")
       localStorage.setItem("Passlist",this.$route.query.data)
       location.replace(`${location.protocol}//${location.host}/#/`)
 
