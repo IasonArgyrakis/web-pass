@@ -1,12 +1,13 @@
-const { defineConfig } = require('@vue/cli-service')
+const {defineConfig} = require('@vue/cli-service')
+var githubPage = require('./package').name
 module.exports = defineConfig({
-  publicPath:"/web-pass",
-  transpileDependencies: [
-    'vuetify'
-  ],
-  configureWebpack:{
-    devtool: 'source-map'
-  },
+    publicPath: githubPage.name,
+    transpileDependencies: [
+        'vuetify'
+    ],
+    configureWebpack: {
+        devtool: 'source-map'
+    },
 
 
 })
