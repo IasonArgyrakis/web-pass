@@ -10,18 +10,49 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state() {
         return {
+            isMobile:false,
             isDecrypted: false,
             masterPassword: "",
             PasswordList: [],
+            EmailList:[],
+            previousDataExist:false
         }
     },
     getters: {
+        getPreviousDataExistence(state) {
+            if(localStorage.getItem("Passlist")!==null){
+                console.log("data Found")
+                state.previousDataExist=true
+                return state.previousDataExist
+            }else{
+                console.log("no data Found")
+                state.previousDataExist=false
+                return state.previousDataExist
+            }
+        },
         getPasswordList(state) {
             return state.PasswordList
         },
+        getEmailList(state){
+            return state.EmailList
+        },
         getIsDecrypted(state) {
             return state.isDecrypted;
+        },
+        getDeviceTypeIsMobile(state) {
+            //return "desktop";
+            const ua = navigator.userAgent;
+            if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+                //return "tablet";
+                state.isMobile= true
+            } else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+                //return "mobile";
+                state.isMobile= true
+            }
+            return state.isMobile
+
         }
+
     },
     mutations: {
 
@@ -30,6 +61,13 @@ const store = new Vuex.Store({
                 let list = state.PasswordList;
                 list.push(payload)
             }
+        },
+        saveEmail(state,payload){
+            if(state.isDecrypted){
+                let emailList = state.EmailList;
+                emailList.push(payload)
+            }
+
         },
         savePasswordsList(state) {
             //var CryptoJS = require("crypto-js");
@@ -49,23 +87,6 @@ const store = new Vuex.Store({
             } else {
                 window.alert("Your master password causes an error")
             }
-        },
-        loadPasswordsListFromStorage(state) {
-            let ciphertext
-            if(localStorage.getItem("Passlist")!==null){
-                console.log("old Data Found")
-                ciphertext=localStorage.getItem("Passlist")
-
-            }else{
-                console.log("no data Found")
-
-            }
-
-            // // Decrypt
-            // var bytes = CryptoJS.AES.decrypt(ciphertext, state.masterPassword);
-            // var originalText = bytes.toString(CryptoJS.enc.Utf8);
-            // let JsonObj=JSON.parse(originalText)
-            // state.PasswordList = JsonObj
         },
         decrypt(state){
 
