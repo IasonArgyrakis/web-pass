@@ -3,6 +3,13 @@
 # abort on errors
 set -e
 
+git checkout gh-pages
+
+rm -rf index.html css/ js/
+git commit -m "removed old build"
+
+git push
+
 
 # delete branch locally
 git branch -d gh-pages
