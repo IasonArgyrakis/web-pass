@@ -6,6 +6,40 @@
         <v-col cols="12 no-gutters">
 
 
+          <div>
+            <v-autocomplete
+                filled
+                :disabled="!getIsDecrypted"
+                :filter="passwordFilter"
+                :items="getPasswordList"
+                label="Search">
+              <template
+                  slot="item"
+                  slot-scope="{ item }"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                    <v-list-item-subtitle>
+                      <v-container class="password-detail"
+                                   v-show="isNotKey(['uid','name'],keyName)"
+                                   v-for="(keyValue,keyName) in item" :key="keyName">
+                        <v-row no-gutters>
+                          <p class="col-3  pt-2 ma-0 px-0  text-end text--secondary text-capitalize">{{ keyName }}</p>
+                          <p :class=" ['col-7 sensitive  pt-2 ma-0 px-0 ml-1 mr-auto',{'blured-text':isNotKey(['email','url'],keyName)}]">
+                            {{ keyValue }}
+                          </p>
+                          <v-icon class="ml-2" medium
+                                  @click="toClipboard(keyValue)">
+                            mdi-content-copy
+                          </v-icon>
+                        </v-row>
+                      </v-container>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-autocomplete>
 
             <div v-if="getIsDecrypted">
               <div v-show="!hasNoPasswords" v-for="password in getPasswordList" v-bind:key="password.uid">
@@ -35,6 +69,7 @@
                 <v-card-title class="text--white">You Need to Decrypt First</v-card-title>
               </v-card>
             </div>
+          </div>
 
 
         </v-col>
@@ -71,7 +106,13 @@ export default {
     toClipboard(value) {
       navigator.clipboard.writeText(value);
     },
-
+    passwordFilter(item, queryText) {
+      const keys = Object.keys(item).map(key => key.toLowerCase());
+      const values = Object.values(item).map(value => value.toString().toLowerCase());
+      const searchText = queryText.toLowerCase();
+      return (keys.findIndex(item => item.indexOf(searchText) > -1) > -1) ||
+          (values.findIndex(item => item.indexOf(searchText) > -1) > -1)
+    },
 
   },
   computed: {

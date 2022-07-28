@@ -17,7 +17,6 @@ export default {
   name: 'App',
   components: {HeaderComponent},
   beforeMount() {
-    console.log("smt hnew")
     if(this.$route.query.data!==undefined&&this.$route.query.data!==""){
       console.log(this.$route.query.data)
       localStorage.setItem("Passlist",this.$route.query.data)
