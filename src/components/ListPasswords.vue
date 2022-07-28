@@ -6,8 +6,7 @@
         <v-col cols="12 no-gutters">
 
 
-
-            <div v-if="getIsDecrypted">
+            <div v-if="getDataStatus==='decrypted'">
               <div v-show="!hasNoPasswords" v-for="password in getPasswordList" v-bind:key="password.uid">
                 <v-card :disabled="!getIsDecrypted" elevation="6" class="mx-1 my-3 pa-2 ">
                   <div class="password-detail pa-1"
@@ -30,11 +29,17 @@
                 <v-card-title class="text--white">No Passwords</v-card-title>
               </v-card>
             </div>
-            <div v-if="!getIsDecrypted">
+            <div v-else-if="getDataStatus==='encrypted'">
               <v-card dark color="red">
                 <v-card-title class="text--white">You Need to Decrypt First</v-card-title>
               </v-card>
             </div>
+          <div v-else-if="getDataStatus==='no-data'">
+            <v-card dark color="blue darken-4">
+              <v-card-title class="text--white">No data found</v-card-title>
+              <v-card-subtitle>You can start by setting a master Password Above</v-card-subtitle>
+            </v-card>
+          </div>
 
 
         </v-col>
@@ -80,7 +85,9 @@ export default {
     },
     ...mapGetters({
       getPasswordList: "getPasswordList",
-      getIsDecrypted: "getIsDecrypted"
+      getIsDecrypted: "getIsDecrypted",
+      getPreviousDataExistence:"getPreviousDataExistence",
+      getDataStatus:"getDataStatus"
     }),
 
   },
