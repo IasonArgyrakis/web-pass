@@ -22,7 +22,9 @@
             class="shrink mx-4 text-input-blue"
             v-model="masterPassword"
         />
-        <v-btn v-show="!getIsDecrypted" @click="decrypt">Unlock</v-btn>
+
+      <v-btn  v-show="this.toolbarButtonState().show" @click="decrypt">{{ this.toolbarButtonState().text }}</v-btn>
+
         <v-autocomplete
             hide-details
             single-line
@@ -76,7 +78,7 @@
     >
       <template v-slot:prepend>
 
-        <v-tooltip v-if="security==='decrypted'" bottom>
+        <v-tooltip v-if="getDataStatus==='decrypted'" bottom>
           <template v-slot:activator="{ on, attrs }">
             <div v-bind="attrs"
                  v-on="on" class="d-flex align-center justify-center pa-2 mx-auto">
@@ -90,7 +92,7 @@
         </v-tooltip>
 
 
-        <v-tooltip v-if="security==='encrypted'" bottom>
+        <v-tooltip v-if="getDataStatus==='encrypted'" bottom>
           <template v-slot:activator="{ on, attrs }">
             <div v-bind="attrs"
                  v-on="on" class="d-flex align-center justify-center pa-2 mx-auto">
@@ -103,7 +105,7 @@
           <span>Encrypted Data was found enter your master password</span>
         </v-tooltip>
 
-        <v-tooltip v-if="security==='no-data'" bottom>
+        <v-tooltip v-if="getDataStatus==='no-data'" bottom>
           <template v-slot:activator="{ on, attrs }">
             <div v-bind="attrs"
                  v-on="on" class="d-flex align-center justify-center pa-2 mx-auto">
@@ -150,14 +152,22 @@
             </v-list-item-title>
           </v-list-item>
 
-
         </v-list-item-group>
       </v-list>
       <template v-slot:append>
-        <div v-if="getIsDecrypted" v-show="!isMiniNav" class="pa-2">
+
+        <div v-if="getIsDecrypted" v-show="!isMiniNav" class="ma-2 pa-2">
           <qrcode-vue :value="webHash" class="mx-auto text-center" :size="200" level="H"/>
           <p class="px-3 overflow-hidden text-wrap">{{ webHash }}</p>
         </div>
+        <v-list-item class="mt-auto" to="/settings">
+          <v-list-item-icon>
+            <v-icon>mdi-cog</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>
+            Settings
+          </v-list-item-title>
+        </v-list-item>
       </template>
     </v-navigation-drawer>
   </section>
@@ -185,6 +195,7 @@ export default {
 
   }),
   mounted() {
+    this.hasPreviousData()
     if (this.getDeviceTypeIsMobile()) {
       this.isMobile = true
       this.isDesktop = false
@@ -203,16 +214,21 @@ export default {
     }
 
 
+
+
   },
 
   methods: {
     ...mapMutations({
       setMasterPassword: "setMasterPassword",
       decryptStorage: "decrypt",
+      hasPreviousData:"getPreviousDataExistence",
     }),
     ...mapGetters({
       getDeviceTypeIsMobile: "getDeviceTypeIsMobile",
+
     }),
+
     isNotKey(UnwantedKey, comparedValue) {
       if (Array.isArray(UnwantedKey)) {
         let toBool = UnwantedKey.map(item =>
@@ -240,27 +256,29 @@ export default {
       return (keys.findIndex(item => item.indexOf(searchText) > -1) > -1) ||
           (values.findIndex(item => item.indexOf(searchText) > -1) > -1)
     },
+    toolbarButtonState (){
+
+      let info= {}
+      if(this.getDataStatus==='no-data'){
+        info= {show:true,text:"Set Master Password"}
+      }else if(this.getDataStatus==='encrypted'){
+        info= {show:true,text:"Enter Master Password"}
+      }
+      else if(this.getDataStatus==='decrypted'){
+        info= {show:false,text:"Set Master Password"}
+      }
+      return info
+    },
 
   },
   computed: {
     ...mapGetters({
+      getDataStatus:"getDataStatus",
       getIsDecrypted: "getIsDecrypted",
-      hasPreviousData: "getPreviousDataExistence",
       getPasswordList: "getPasswordList",
+
     }),
 
-    security() {
-      let status = "no-data"
-      if (this.hasPreviousData) {
-        status = "encrypted"
-      }
-      if (this.getIsDecrypted) {
-        status = "decrypted"
-      }
-      console.log(status)
-
-      return status
-    },
     webHash() {
       if (this.getIsDecrypted) {
         let data = localStorage.getItem('Passlist');
@@ -277,7 +295,7 @@ export default {
     },
 
 
-  }
+  },
 }
 
 

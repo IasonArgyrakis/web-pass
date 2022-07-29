@@ -10,6 +10,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state() {
         return {
+            dataStatus:"",
             isMobile:false,
             isDecrypted: false,
             masterPassword: "",
@@ -19,16 +20,19 @@ const store = new Vuex.Store({
         }
     },
     getters: {
-        getPreviousDataExistence(state) {
-            if(localStorage.getItem("Passlist")!==null){
-                console.log("data Found")
-                state.previousDataExist=true
-                return state.previousDataExist
-            }else{
-                console.log("no data Found")
-                state.previousDataExist=false
-                return state.previousDataExist
+
+        getDataStatus(state) {
+
+            if (state.isDecrypted===false && state.previousDataExist===true) {
+                state.dataStatus = "encrypted"
             }
+            if (state.isDecrypted===true && state.previousDataExist===true) {
+                state.dataStatus = "decrypted"
+            }
+            if (state.isDecrypted===false && state.previousDataExist===false) {
+                state.dataStatus = "no-data"
+            }
+            return state.dataStatus
         },
         getPasswordList(state) {
             return state.PasswordList
@@ -55,6 +59,19 @@ const store = new Vuex.Store({
 
     },
     mutations: {
+        getPreviousDataExistence(state) {
+            if(localStorage.getItem("Passlist")!==null){
+                console.log("data Found")
+                state.previousDataExist=true
+                state.isDecrypted=false
+                return state.previousDataExist
+            }else{
+                console.log("no data Found")
+                state.previousDataExist=false
+                state.isDecrypted=false
+                return state.previousDataExist
+            }
+        },
 
         savePassword(state, payload) {
             if (state.isDecrypted) {
@@ -84,6 +101,10 @@ const store = new Vuex.Store({
             payload = payload.toString()
             if (payload !== null || payload !== "") {
                 state.masterPassword = payload
+                state.dataStatus = "encrypted"
+
+
+
             } else {
                 window.alert("Your master password causes an error")
             }
@@ -110,6 +131,8 @@ const store = new Vuex.Store({
                 let JsonObj=JSON.parse(originalText)
                 state.PasswordList = JsonObj
                 state.isDecrypted =true
+                state.previousDataExist=true
+                state.dataStatus='decrypted'
             } catch (error) {
                 console.error(error.message)
                    window.alert("incorrect Master Pass re enter");
