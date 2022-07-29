@@ -152,14 +152,22 @@
             </v-list-item-title>
           </v-list-item>
 
-
         </v-list-item-group>
       </v-list>
       <template v-slot:append>
-        <div v-if="getIsDecrypted" v-show="!isMiniNav" class="pa-2">
+
+        <div v-if="getIsDecrypted" v-show="!isMiniNav" class="ma-2 pa-2">
           <qrcode-vue :value="webHash" class="mx-auto text-center" :size="200" level="H"/>
           <p class="px-3 overflow-hidden text-wrap">{{ webHash }}</p>
         </div>
+        <v-list-item class="mt-auto" to="/settings">
+          <v-list-item-icon>
+            <v-icon>mdi-cog</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>
+            Settings
+          </v-list-item-title>
+        </v-list-item>
       </template>
     </v-navigation-drawer>
   </section>

@@ -32,6 +32,7 @@
             <div v-else-if="getDataStatus==='encrypted'">
               <v-card dark color="red">
                 <v-card-title class="text--white">You Need to Decrypt First</v-card-title>
+                <v-card-subtitle>You can reset your storage from the <v-btn  dark outlined color="gray" small text to="/settings">settings page</v-btn></v-card-subtitle>
               </v-card>
             </div>
           <div v-else-if="getDataStatus==='no-data'">
