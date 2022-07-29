@@ -20,30 +20,18 @@ const store = new Vuex.Store({
         }
     },
     getters: {
-        getPreviousDataExistence(state) {
-            if(localStorage.getItem("Passlist")!==null){
-                console.log("data Found")
-                state.previousDataExist=true
-                state.isDecrypted=false
-                return state.previousDataExist
-            }else{
-                console.log("no data Found")
-                state.previousDataExist=false
-                return state.previousDataExist
-            }
-        },
+
         getDataStatus(state) {
 
-            if (state.getIsDecrypted===false && state.previousDataExist===true) {
+            if (state.isDecrypted===false && state.previousDataExist===true) {
                 state.dataStatus = "encrypted"
             }
-            if (state.getIsDecrypted===true && state.previousDataExist===true) {
+            if (state.isDecrypted===true && state.previousDataExist===true) {
                 state.dataStatus = "decrypted"
             }
-            if (state.getIsDecrypted===false && state.previousDataExist===false) {
+            if (state.isDecrypted===false && state.previousDataExist===false) {
                 state.dataStatus = "no-data"
             }
-
             return state.dataStatus
         },
         getPasswordList(state) {
@@ -71,6 +59,19 @@ const store = new Vuex.Store({
 
     },
     mutations: {
+        getPreviousDataExistence(state) {
+            if(localStorage.getItem("Passlist")!==null){
+                console.log("data Found")
+                state.previousDataExist=true
+                state.isDecrypted=false
+                return state.previousDataExist
+            }else{
+                console.log("no data Found")
+                state.previousDataExist=false
+                state.isDecrypted=false
+                return state.previousDataExist
+            }
+        },
 
         savePassword(state, payload) {
             if (state.isDecrypted) {

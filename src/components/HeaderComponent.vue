@@ -187,6 +187,7 @@ export default {
 
   }),
   mounted() {
+    this.hasPreviousData()
     if (this.getDeviceTypeIsMobile()) {
       this.isMobile = true
       this.isDesktop = false
@@ -213,10 +214,11 @@ export default {
     ...mapMutations({
       setMasterPassword: "setMasterPassword",
       decryptStorage: "decrypt",
+      hasPreviousData:"getPreviousDataExistence",
     }),
     ...mapGetters({
       getDeviceTypeIsMobile: "getDeviceTypeIsMobile",
-      hasPreviousData:"getPreviousDataExistence",
+
     }),
 
     isNotKey(UnwantedKey, comparedValue) {
@@ -247,16 +249,14 @@ export default {
           (values.findIndex(item => item.indexOf(searchText) > -1) > -1)
     },
     toolbarButtonState (){
-      let info= {show:this.hasPreviousData(),text:"Set Master Password"}
+
+      let info= {}
       if(this.getDataStatus==='no-data'){
         info= {show:true,text:"Set Master Password"}
-      }
-
-
-      if(this.getDataStatus==='encrypted'){
+      }else if(this.getDataStatus==='encrypted'){
         info= {show:true,text:"Enter Master Password"}
       }
-      if(this.getDataStatus==='decrypted'){
+      else if(this.getDataStatus==='decrypted'){
         info= {show:false,text:"Set Master Password"}
       }
       return info
@@ -268,9 +268,8 @@ export default {
       getDataStatus:"getDataStatus",
       getIsDecrypted: "getIsDecrypted",
       getPasswordList: "getPasswordList",
+
     }),
-
-
 
     webHash() {
       if (this.getIsDecrypted) {
